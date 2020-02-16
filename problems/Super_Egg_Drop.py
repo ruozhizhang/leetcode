@@ -42,8 +42,17 @@ Note:
 
 class Solution:
     def superEggDrop(self, K: int, N: int) -> int:
+        '''
+        f[i][j] means with i eggs and j moves, how many floors can be covered
+        Range of i eggs: 0 - K
+        Range of j moves: 0 - N (for N floors, the max number of needed moves is N)
+        '''
         f = [[0] * (N + 1) for _ in range(K + 1)]
 
+        '''
+        If only one floor, needed move is 1
+        If only one egg, the max number of floors can be covered by j moves is j (just try dropping the egg starting from floor 1 until floor j)
+        '''
         for i in range(1, K + 1):
             f[i][1] = 1
         for j in range(1, N + 1):
@@ -52,6 +61,17 @@ class Solution:
         if K == 1 or N == 1:
             return f[K][N]
 
+        '''
+        Assuming f[i - 1][j - 1] == A and f[i][j - 1] == B, how many floors can f[i][j] cover?
+        the answer is f[i - 1][j - 1] + f[i][j - 1] + 1 = A + B + 1
+
+        Note that we need to cover the number of floors with certainty, regardless of the initial value of F.
+        If we try to drop one egg in floor A + 1, there can only be two cases of F here:
+        1. F can be greater than or equal to A + 1, then the egg won't break, and then we can use f[i][j - 1] moves to cover B more floors
+        2. F can be less than A + 1, then the egg will break, and then we can use f[i - 1][j] moves to cover A more floors
+
+        So in the range of A + B + 1 floors, no matter what the inital value F is, f[i][j] would be able to find it, hence f[i][j] = f[i - 1][j - 1] + f[i][j - 1] + 1
+        '''
         for i in range(2, K + 1):
             for j in range(2, N + 1):
                 f[i][j] = f[i - 1][j - 1] + f[i][j - 1] + 1
