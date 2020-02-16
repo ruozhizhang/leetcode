@@ -1,2 +1,1 @@
-# Record Leetcode learning process
-# Ruozhi
+# leetcode solutions and code library
