@@ -61,8 +61,7 @@ number so both total sum and positive sum is 0
 from collections import defaultdict
 class Solution:
     def tallestBillboard(self, rods: List[int]) -> int:
-        preSum = {}
-        preSum[0] = 0
+        preSum = {0: 0}
 
         for l in rods:
             curSum = defaultdict(int)
