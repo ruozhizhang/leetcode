@@ -24,6 +24,10 @@
 #    3) Zero of any numeric type, e.g. 0, 0.0, 0j
 #    4) Empty sequence, e.g. (), [], ''
 #    5) Empty mapping. e.g. {}
-#    6) Objects of Class which has __bool__() or __len__ method which returns 0
-#       or False
+#    6) Objects of Class which has __bool__() or __len__ method which returns 0 or False
 #    All other values except these values are considered True
+
+# 8. to remove duplicates, usually making the results sorted is a good idea
+#    (not limited to sorting after building results, could also be keeping it
+#    sorted while building)
+#    e.g. https://leetcode.com/problems/factor-combinations/
