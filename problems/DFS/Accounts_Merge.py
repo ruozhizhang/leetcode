@@ -35,6 +35,7 @@ The length of accounts[i] will be in the range [1, 10].
 The length of accounts[i][j] will be in the range [1, 30].
 '''
 
+# Approach 1: DFS
 from collections import defaultdict
 class Solution:
     def accountsMerge(self, accounts: List[List[str]]) -> List[List[str]]:
@@ -65,3 +66,74 @@ class Solution:
                         temp.append(nei)
             res.append([name[acc]] + sorted(temp))
         return res
+
+# Approach 2: BFS
+from collections import defaultdict, deque
+class Solution:
+    def accountsMerge(self, accounts: List[List[str]]) -> List[List[str]]:
+        d = defaultdict(set)
+        name = {}
+
+        # build graph where vertex is email and each email connects with the first email in the account
+        for acc in accounts:
+            for i in range(1, len(acc)):
+                name[acc[i]] = acc[0]
+                d[acc[i]].add(acc[1])
+                d[acc[1]].add(acc[i])
+
+        # do BFS to search for all connected vertexes and put into the same list
+        res = []
+        seen = set()
+        q = deque()
+        for acc in d:
+            if acc in seen:
+                continue
+            q.append(acc)
+            seen.add(acc)
+            temp = [acc]
+            while q:
+                cur = q.popleft()
+                for nxt in d[cur]:
+                    if nxt not in seen:
+                        q.append(nxt)
+                        seen.add(nxt)
+                        temp.append(nxt)
+            res.append([name[acc]] + sorted(temp))
+        return res
+
+# Approach 3: Union Find
+class Solution:
+    def accountsMerge(self, accounts: List[List[str]]) -> List[List[str]]:
+        parent = {}
+        emailToName = {}
+        rank = {}
+
+        def find(x):
+            if parent[x] != x:
+                parent[x] = find(parent[x])
+            return parent[x]
+
+        def union(x, y):
+            rootX, rootY = find(x), find(y)
+            if rank[rootX] < rank[rootY]:
+                parent[rootX] = rootY
+            elif rank[rootX] > rank[rootY]:
+                parent[rootY] = rootX
+            else:
+                parent[rootX] = rootY
+                rank[rootY] += 1
+
+        for account in accounts:
+            name = account[0]
+            for email in account[1:]:
+                if email not in parent:
+                    parent[email] = email
+                    rank[email] = 0
+                    emailToName[email] = name
+                union(email, account[1])
+
+        d = collections.defaultdict(list)
+        for email in parent:
+            d[find(email)].append(email)
+
+        return [[emailToName[root]] + sorted(emails) for root, emails in d.items()]
