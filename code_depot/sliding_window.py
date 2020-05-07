@@ -8,4 +8,6 @@ sudo code template:
 while right pointer can still move:
     move left pointer when appropriate
     update result
+
+usually use a dict to record current window info
 '''

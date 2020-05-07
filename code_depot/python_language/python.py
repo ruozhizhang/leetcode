@@ -31,3 +31,11 @@
 #    (not limited to sorting after building results, could also be keeping it
 #    sorted while building)
 #    e.g. https://leetcode.com/problems/factor-combinations/
+
+# 9. nested list comprehension
+    [(i, j) for i in range(m) for j in range(n)]
+#   is equivalent to
+    l = []
+    for i in range(m):
+        for j in range(n):
+            l.append((i, j))
