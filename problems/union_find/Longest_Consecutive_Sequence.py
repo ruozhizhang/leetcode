@@ -13,7 +13,9 @@ Explanation: The longest consecutive elements sequence is [1, 2, 3, 4]. Therefor
 its length is 4.
 '''
 
-# Approach 1
+'''
+APPROACH 1: Hash table - 1
+'''
 from collections import defaultdict
 class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:
@@ -31,7 +33,33 @@ class Solution:
             res = max(res, d[lb], d[rb])
         return res
 
-# Approach 2: Union Find
+'''
+APPROACH 2: Hash table - 2
+'''
+class Solution:
+    def longestConsecutive(self, nums: List[int]) -> int:
+        d = {}
+        res = 0
+        for num in nums:
+            if num in d:
+                continue
+            d[num] = num
+            lb = d.get(num - 1, num)
+            rb = d.get(num + 1, num)
+            d[lb], d[rb] = rb, lb
+            res = max(res, rb - lb + 1)
+        return res
+
+'''
+APPROACH 3: Union Find
+ATTENTION:
+Union only takes effect when there are at least 2 elements, so if the total number
+of elements is less than 2, need special handling
+NOTE:
+Once two nodes are joined together, there is no way they will be separate again,
+so if union is called with the same two nodes, it will just return because they
+will have the same root
+'''
 class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:
         if not nums:
