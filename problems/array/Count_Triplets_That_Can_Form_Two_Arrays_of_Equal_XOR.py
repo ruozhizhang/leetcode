@@ -41,13 +41,11 @@ class Solution:
         for a in arr:
             prexor.append(prexor[-1] ^ a)
 
-        #print(prexor)
         n = len(arr)
         res = 0
         for i in range(n - 1):
             for j in range(i + 1, n):
                 xor = prexor[j + 1] ^ prexor[i]
                 if xor == 0:
-                    #print(i, j)
                     res += j - i
         return res
