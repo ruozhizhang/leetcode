@@ -25,7 +25,7 @@ It is guaranteed that costs.length is even.
 1 <= costs[i][0], costs[i][1] <= 1000
 '''
 
-# Approach 1: Backtrack --- TLE
+# Approach 1: Backtrack ---> TLE
 class Solution:
     def twoCitySchedCost(self, costs: List[List[int]]) -> int:
         return self.helper(costs, 0, 0)
@@ -39,7 +39,7 @@ class Solution:
 
         return min(costs[i][0] + self.helper(costs, i + 1, countA + 1), costs[i][1] + self.helper(costs, i + 1, countA))
 
-# Approach 2: Greedy --- O(nlogn)
+# Approach 2: Greedy ---> O(nlogn)
 class Solution:
     def twoCitySchedCost(self, costs: List[List[int]]) -> int:
         l = sorted((ca - cb, ca, cb) for ca, cb in costs)
