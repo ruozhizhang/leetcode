@@ -35,6 +35,7 @@ Constraints:
 1 <= arr[i] <= 10^8
 '''
 
+# Approach 1 ---> O(n ^ 2)
 class Solution:
     def countTriplets(self, arr: List[int]) -> int:
         prexor = [0]
@@ -48,4 +49,20 @@ class Solution:
                 xor = prexor[j + 1] ^ prexor[i]
                 if xor == 0:
                     res += j - i
+        return res
+
+# Approach 2 ---> using the idea of two sum
+# Remember to add initial case d[0].append(-1)
+from collections import defaultdict
+class Solution:
+    def countTriplets(self, arr: List[int]) -> int:
+        xor = res = 0
+        d = defaultdict(list)
+        d[0].append(-1)
+        for i, num in enumerate(arr):
+            xor ^= num
+            if xor in d:
+                for j in d[xor]:
+                    res += i - j - 1
+            d[xor].append(i)
         return res
