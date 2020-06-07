@@ -35,6 +35,7 @@ cols == pizza[i].length
 pizza consists of characters 'A' and '.' only.
 '''
 
+# Approach 1: DP ---> O(mnk)
 class Solution:
     def ways(self, pizza: List[str], k: int) -> int:
         m, n = len(pizza), len(pizza[0])
@@ -71,3 +72,39 @@ class Solution:
                             f[i][j][l] += f[i][c + 1][l - 1]
                             f[i][j][l] %= MOD
         return f[0][0][k] % MOD
+
+# Approach 2: DP ---> O(mnk)
+class Solution:
+    def ways(self, pizza: List[str], k: int) -> int:
+        m, n = len(pizza), len(pizza[0])
+        apples = [[0] * n for _ in range(m)]
+        for i in range(m - 1, -1, -1):
+            for j in range(n - 1, -1, -1):
+                apples[i][j] = 1 if pizza[i][j] == 'A' else 0
+                if i < m - 1 and j < n - 1:
+                    apples[i][j] += apples[i + 1][j] + apples[i][j + 1] - apples[i + 1][j + 1]
+                elif i < m - 1:
+                    apples[i][j] += apples[i + 1][j]
+                elif j < n - 1:
+                    apples[i][j] += apples[i][j + 1]
+
+        MOD = 10 ** 9 + 7
+        f = [[[0] * (k + 1) for _ in range(n)] for _ in range(m)]
+        for i in range(m - 1, -1, -1):
+            for j in range(n - 1, -1, -1):
+                for l in range(1, k + 1):
+                    if l == 1:
+                        f[i][j][l] += 1 if apples[i][j] > 0 else 0
+                        continue
+
+                    for r in range(i + 1, m):
+                        if apples[i][j] - apples[r][j] > 0:
+                            f[i][j][l] += f[r][j][l - 1]
+                            f[i][j][l] %= MOD
+
+                    for c in range(j + 1, n):
+                        if apples[i][j] - apples[i][c] > 0:
+                            f[i][j][l] += f[i][c][l - 1]
+                            f[i][j][l] %= MOD
+
+        return f[0][0][k]
