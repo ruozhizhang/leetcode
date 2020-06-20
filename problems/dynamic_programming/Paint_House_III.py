@@ -56,25 +56,25 @@ n == cost[i].length
 
 class Solution:
     def minCost(self, houses: List[int], cost: List[List[int]], m: int, n: int, target: int) -> int:
-        f = [[[float('inf')] * (n + 1) for _ in range(target + 1)] for _ in range(m + 1)]
-        for i in range(n + 1):
-            f[0][0][i] = 0
+        f = [[[float('inf')] * n for _ in range(target + 1)] for _ in range(m + 1)]
+        for k in range(n):
+            f[0][0][k] = 0
 
         for i in range(1, m + 1):
-            for j in range(1, i + 1):
-                if j > target:
-                    break
-                for k in range(1, n + 1):
-                    if houses[i - 1] != 0 and houses[i - 1] != k:
+            for j in range(1, min(i, target) + 1):
+                k = houses[i - 1]
+                for c in range(n):
+                    if k != 0 and k != c + 1:
                         continue
-                    last = 0
-                    for l in range(i - 1, -1, -1):
-                        if houses[l] != 0 and houses[l] != k:
-                            break
-                        last += cost[l][k - 1] if houses[l] == 0 else 0
-                        for p in range(1, n + 1):
-                            if p != k:
-                                f[i][j][k] = min(f[i][j][k], last + f[l][j - 1][p])
+                    temp = cost[i - 1][c] if k == 0 else 0
+                    # previous one has same color
+                    f[i][j][c] = f[i - 1][j][c] + temp
 
-        temp = min(f[m][target][i] for i in range(1, n + 1))
-        return temp if temp != float('inf') else -1
+                    # previous one has different color
+                    for p in range(n):
+                        if p == c:
+                            continue
+                        f[i][j][c] = min(f[i][j][c], f[i - 1][j - 1][p] + temp)
+
+        res = min(f[m][target][c] for c in range(n))
+        return res if res != float('inf') else -1

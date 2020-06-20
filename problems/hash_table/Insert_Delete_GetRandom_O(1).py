@@ -49,8 +49,8 @@ class RandomizedSet:
         if val in self.val2ind:
             return False
         n = len(self.val2ind)
-        self.ind2val[n] = val
         self.val2ind[val] = n
+        self.ind2val[n] = val
         return True
 
     def remove(self, val: int) -> bool:
@@ -59,17 +59,18 @@ class RandomizedSet:
         """
         if val not in self.val2ind:
             return False
-        n = len(self.val2ind)
-        last = self.ind2val[n - 1]
-        if val == last:
-            del self.val2ind[val]
-            del self.ind2val[n - 1]
-            return True
         i = self.val2ind[val]
-        del self.val2ind[val]
-        self.ind2val[i] = last
-        del self.ind2val[n - 1]
+        n = len(self.val2ind)
+        if i == n - 1:
+            del self.val2ind[val]
+            del self.ind2val[i]
+            return True
+
+        last = self.ind2val[n - 1]
         self.val2ind[last] = i
+        self.ind2val[i] = last
+        del self.val2ind[val]
+        del self.ind2val[n - 1]
         return True
 
     def getRandom(self) -> int:
