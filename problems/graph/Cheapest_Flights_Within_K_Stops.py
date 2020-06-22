@@ -27,6 +27,7 @@ k is in the range of [0, n - 1].
 There will not be any duplicated flights or self cycles.
 '''
 
+# Approach 1
 class Solution:
     def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, K: int) -> int:
         # format change of the graph
@@ -53,4 +54,28 @@ class Solution:
                 if p + cost >= res:
                     continue
                 stack.append((nxt, k - 1, cost + p))
+        return res if res != float('inf') else -1
+
+# Approach 2
+from collections import defaultdict
+from functools import lru_cache
+class Solution:
+    def findCheapestPrice(self, n: int, flights: List[List[int]], src: int, dst: int, K: int) -> int:
+        d = defaultdict(list)
+        for a, b, p in flights:
+            d[a].append((b, p))
+
+        @lru_cache(None)
+        def helper(src, dst, k):
+            if src == dst:
+                return 0
+            if k < 0:
+                return float('inf')
+
+            res = float('inf')
+            for nxt, p in d[src]:
+                res = min(res, p + helper(nxt, dst, k - 1))
+            return res
+
+        res = helper(src, dst, K)
         return res if res != float('inf') else -1
