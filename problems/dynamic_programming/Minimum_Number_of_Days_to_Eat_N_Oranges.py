@@ -1,4 +1,6 @@
 '''
+https://leetcode.com/problems/minimum-number-of-days-to-eat-n-oranges/
+
 There are n oranges in the kitchen and you decided to eat some of these oranges every day as follows:
 
 Eat one orange.
