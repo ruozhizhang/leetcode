@@ -59,3 +59,33 @@ class Solution:
             ind = bisect.bisect_left(A, nxt)
             cur = A[ind]
         return res
+
+# solution 2
+class Solution:
+    def maxDistance(self, A: List[int], m: int) -> int:
+        A.sort()
+        if m == 2:
+            return A[-1] - A[0]
+        l = 1
+        r = (A[-1] - A[0]) // (m - 2)
+        while l + 1 < r:
+            mid = l + (r - l) // 2
+            if self.goodDis(A, m, mid):
+                l = mid
+            else:
+                r = mid
+
+        if self.goodDis(A, m, r):
+            return r
+        return l
+
+    def goodDis(self, A, m, d):
+        cur = A[0]
+        count = 0
+        for i in range(1, len(A)):
+            if A[i] - cur >= d:
+                cur = A[i]
+                count += 1
+                if count == m - 1:
+                    return True
+        return False

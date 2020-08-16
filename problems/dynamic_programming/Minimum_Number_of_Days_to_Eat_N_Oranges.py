@@ -42,8 +42,6 @@ Constraints:
 '''
 
 from functools import lru_cache
-
-
 class Solution:
     def minDays(self, n: int) -> int:
         return self.helper(n)
