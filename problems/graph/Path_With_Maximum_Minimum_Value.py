@@ -30,6 +30,7 @@ Note:
 0 <= A[i][j] <= 10 ^ 9
 '''
 
+# Approach 1: Dijkstra's algorithm
 import heapq
 class Solution:
     def maximumMinimumPath(self, A: List[List[int]]) -> int:
@@ -47,3 +48,35 @@ class Solution:
                 if 0 <= nx < m and 0 <= ny < n and not visited[nx][ny]:
                     visited[nx][ny] = True
                     heapq.heappush(heap, (max(curScore, -A[nx][ny]), nx, ny))
+
+# Approach 2: Union Find
+class Solution:
+    def maximumMinimumPath(self, A: List[List[int]]) -> int:
+        m, n = len(A), len(A[0])
+        nums = sorted((-A[i][j], i, j) for i in range(m) for j in range(n))
+
+        def find(x):
+            if parent[x] != x:
+                parent[x] = find(parent[x])
+            return parent[x]
+
+        def union(x, y):
+            px, py = find(x), find(y)
+            if px == py:
+                return False
+            parent[px] = py
+            return True
+
+        parent = [-1] * (m * n)
+        dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        for num, i, j in nums:
+            parent[i * n + j] = i * n + j
+            for di, dj in dirs:
+                ni, nj = i + di, j + dj
+                if 0 <= ni < m and 0 <= nj < n and parent[ni * n + nj] != -1:
+                    union(i * n + j, ni * n + nj)
+
+            if parent[0] != -1 and parent[m * n - 1] != -1 and find(0) == find(m * n - 1):
+                return -num
+
+        return A[0][0]
